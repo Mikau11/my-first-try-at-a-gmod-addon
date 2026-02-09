@@ -47,7 +47,7 @@ function commands(sender, text, teamChat)
         sender:Give("item_ammo_ar2_altfire")
     elseif text == "!shotgun" then
         sender:Give("weapon_shotgun")
-        sender:Give("item_box_buckshot") --buckshot?, more like fuckshot hahahhahahahahahahahahahahaha, i am so unfunny
+        sender:Give("item_box_buckshot") --buckshot?, more like ****shot hahahhahahahahahahahahahahaha, i am so unfunny
     elseif text == "crossbow" then
         sender:Give("weapon_crossbow")
     elseif text == "!grenade" then
