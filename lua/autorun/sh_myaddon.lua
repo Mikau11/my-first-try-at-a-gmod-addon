@@ -1,11 +1,22 @@
 --Shared Script
 
+-- ------------------------------------------ --
+-- --------------Shared Variables------------ --
+-- ------------------------------------------ --
+local suicide_death_count = 0
+local npc_death_count = 0
+local plaeyr_death_count = 0
+
+local npc_kill_count = 0
+local npc_kill_first = True
 
 -- ------------------------------------------ --
 -- --------------Hook Functions-------------- --
 -- ------------------------------------------ --
 
---Player spawn stuff
+
+
+--Player spawn stuff, Death stuff
 function on_first_respawn(player)
     player:ChatPrint("Welcome to my addon!")
     player:ChatPrint("To see a list of commands")
@@ -16,13 +27,40 @@ function Spawn(player)
 end
 
 function ondeath(dead_player, inflictor, murderer)
-    if dead_player == murderer or dead_player == inflictor then
+    if dead_player == murderer or dead_player == inflictor or not murderer:IsValid() then
+        suicide_death_count = suicide_death_count + 1
         dead_player:ChatPrint(dead_player:Nick() .. " has killed themselves!!!!!")
+        if suicide_death_count >= 5 then
+            dead_player:ChatPrint("You've killed yourself " .. suicide_death_count .. " times!")
+        end
     elseif not murderer:IsPlayer() then
-        dead_player:ChatPrint(dead_player:Nick() .. " was killed by" .. murderer:GetModel())
+        npc_death_count = npc_death_count + 1
+        dead_player:ChatPrint(dead_player:Nick() .. " was killed by " .. murderer:GetModel())
+        if npc_death_count >= 5 then
+            dead_player:ChatPrint("You've been killed by an npc " .. npc_death_count .. " times!")
+        end
     else 
-        dead_player:ChatPrint(dead_player:Nick() .. " was killed by" .. murderer:Nick())
+        dead_player:ChatPrint(dead_player:Nick() .. " was killed by " .. murderer:Nick())
+        if plaeyr_death_count >= 5 then
+            dead_player:ChatPrint("You've been killed by " .. murderer:Nick() .. plaeyr_death_count .. " times!")
+            dead_player:ChatPrint("They must really hate you!")
+        end
     end
+end
+
+function onnpckilled(npc_name, player_killer, inflictor)
+    npc_kill_count = npc_kill_count + 1
+    if player_killer:IsPlayer() then
+        if npc_kill_first == True then
+            player_killer:ChatPrint(player_killer:Nick() .. " has killed an npc!")
+        else
+            player_killer:ChatPrint(player_killer:Nick() .. " has killed another npc!")
+        end
+        if npc_kill_count >=5 then
+            player_killer:ChatPrint(player_killer:Nick() .. " has killed " ..npc_kill_count .. "npcs!")
+        end
+    end
+    npc_kill_first = False
 end
 
 --Text commands
